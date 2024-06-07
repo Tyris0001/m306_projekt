@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from helpers import export_to_csv, export_to_json
+from classes.helpers import export_to_csv, export_to_json
 
 class ESLParser:
     def __init__(self, file_path):

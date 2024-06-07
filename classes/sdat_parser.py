@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from datetime import timedelta
 from dateutil import parser as date_parser
-from helpers import export_to_csv, export_to_json
+from classes.helpers import export_to_csv, export_to_json
 
 class SDATParser:
     def __init__(self, file_path):
