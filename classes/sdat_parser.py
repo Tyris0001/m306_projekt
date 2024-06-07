@@ -2,11 +2,13 @@ import xml.etree.ElementTree as ET
 from datetime import timedelta
 from dateutil import parser as date_parser
 from classes.helpers import export_to_csv, export_to_json
+import logging
 
 class SDATParser:
     def __init__(self, file_path):
         self.file_path = file_path
         self.data = []
+        logging.debug(f"SDATParser initialized for file: {file_path}")
 
     def parse(self):
         tree = ET.parse(self.file_path)
@@ -40,10 +42,12 @@ class SDATParser:
                     'sequence': sequence,
                     'volume': volume
                 })
+        logging.debug(f"SDAT file parsed: {self.file_path}")
 
     def get_data(self):
         unique_data = {entry['timestamp']: entry for entry in self.data}
         sorted_data = sorted(unique_data.values(), key=lambda x: x['timestamp'])
+        logging.debug(f"SDAT data processed: {self.file_path}")
         return sorted_data
 
     def export_to_csv(self, file_path):

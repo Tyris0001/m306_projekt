@@ -1,11 +1,13 @@
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from classes.helpers import export_to_csv, export_to_json
+import logging
 
 class ESLParser:
     def __init__(self, file_path):
         self.file_path = file_path
         self.data = []
+        logging.debug(f"ESLParser initialized for file: {file_path}")
 
     def parse(self):
         tree = ET.parse(self.file_path)
@@ -29,10 +31,12 @@ class ESLParser:
                     'value': value,
                     'status': status
                 })
+        logging.debug(f"ESL file parsed: {self.file_path}")
 
     def get_data(self):
         unique_data = {entry['timestamp']: entry for entry in self.data}
         sorted_data = sorted(unique_data.values(), key=lambda x: x['timestamp'])
+        logging.debug(f"ESL data processed: {self.file_path}")
         return sorted_data
 
     def export_to_csv(self, file_path):
