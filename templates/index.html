@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +15,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            background-color: var(--chart-bg-color);
         }
         #chart-container {
             position: absolute;
@@ -29,9 +31,9 @@
             left: -200px;
             width: 200px;
             height: 100%;
-            background-color: #f8f9fa;
+            background-color: var(--side-menu-bg-color);
             transition: left 0.3s ease-in-out;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             padding: 20px;
         }
@@ -43,8 +45,8 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
-            background-color: #007bff;
-            color: white;
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -52,17 +54,166 @@
             text-align: center;
         }
         .button:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-bg-color);
         }
         #debug-info {
+            color: var(--log-text-color);
             bottom: 10px;
             left: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: var(--debug-info-bg-color);
             padding: 10px;
             border-radius: 5px;
             font-size: 12px;
             max-height: 200px;
             overflow-y: auto;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: var(--modal-bg-color);
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid var(--modal-border-color);
+            width: 50%;
+        }
+        .close {
+            color: var(--close-button-color);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: var(--close-button-hover-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #settings-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--settings-button-bg-color);
+            color: var(--settings-button-text-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #settings-button:hover {
+            background-color: var(--settings-button-hover-bg-color);
+        }
+        :root {
+            --side-menu-bg-color: #f8f9fa;
+            --button-bg-color: #007bff;
+            --button-text-color: white;
+            --button-hover-bg-color: #0056b3;
+            --debug-info-bg-color: rgba(255, 255, 255, 0.8);
+            --modal-bg-color: #fefefe;
+            --modal-border-color: #888;
+            --close-button-color: #aaa;
+            --close-button-hover-color: black;
+            --settings-button-bg-color: #f0f0f0;
+            --settings-button-text-color: #333;
+            --settings-button-hover-bg-color: #ddd;
+            --text-color: #333;
+            --chart-bg-color: white;
+            --log-text-color: #333;
+            --consumption-color: rgb(255, 99, 132);
+            --consumption-bg-color: rgba(255, 99, 132, 0.5);
+            --production-color: rgb(54, 162, 235);
+            --production-bg-color: rgba(54, 162, 235, 0.5);
+            --daily-difference-color: rgba(75, 192, 192, 0.8);
+            --chart-text-color: #333;
+            --chart-tick-color: #666;
+        }
+        body.dark {
+            --side-menu-bg-color: #333;
+            --button-bg-color: #555;
+            --button-text-color: white;
+            --button-hover-bg-color: #444;
+            --debug-info-bg-color: rgba(0, 0, 0, 0.8);
+            --modal-bg-color: #444;
+            --modal-border-color: #888;
+            --close-button-color: #aaa;
+            --close-button-hover-color: white;
+            --settings-button-bg-color: #444;
+            --settings-button-text-color: white;
+            --settings-button-hover-bg-color: #333;
+            --text-color: white;
+            --chart-bg-color: #222;
+            --log-text-color: #ccc;
+            --consumption-color: rgb(255, 99, 132);
+            --consumption-bg-color: rgba(255, 99, 132, 0.8);
+            --production-color: rgb(54, 162, 235);
+            --production-bg-color: rgba(54, 162, 235, 0.8);
+            --daily-difference-color: rgba(75, 192, 192, 0.8);
+            --chart-text-color: #ccc;
+            --chart-tick-color: #999;
+        }
+        body.dracula {
+            --side-menu-bg-color: #282a36;
+            --button-bg-color: #44475a;
+            --button-text-color: #f8f8f2;
+            --button-hover-bg-color: #6272a4;
+            --debug-info-bg-color: rgba(68, 71, 90, 0.8);
+            --modal-bg-color: #44475a;
+            --modal-border-color: #6272a4;
+            --close-button-color: #f8f8f2;
+            --close-button-hover-color: #ff79c6;
+            --settings-button-bg-color: #44475a;
+            --settings-button-text-color: #f8f8f2;
+            --settings-button-hover-bg-color: #6272a4;
+            --text-color: #f8f8f2;
+            --chart-bg-color: #282a36;
+            --log-text-color: #f8f8f2;
+            --consumption-color: #ff79c6;
+            --consumption-bg-color: rgba(255, 121, 198, 0.8);
+            --production-color: #8be9fd;
+            --production-bg-color: rgba(139, 233, 253, 0.8);
+            --daily-difference-color: rgba(189, 147, 249, 0.8);
+            --chart-text-color: #f8f8f2;
+            --chart-tick-color: #6272a4;
+        }
+        body.monokai {
+            --side-menu-bg-color: #272822;
+            --button-bg-color: #75715e;
+            --button-text-color: #f8f8f2;
+            --button-hover-bg-color: #a6e22e;
+            --debug-info-bg-color: rgba(117, 113, 94, 0.8);
+            --modal-bg-color: #75715e;
+            --modal-border-color: #a6e22e;
+            --close-button-color: #f8f8f2;
+            --close-button-hover-color: #f92672;
+            --settings-button-bg-color: #75715e;
+            --settings-button-text-color: #f8f8f2;
+            --settings-button-hover-bg-color: #a6e22e;
+            --text-color: #f8f8f2;
+            --chart-bg-color: #272822;
+            --log-text-color: #f8f8f2;
+            --consumption-color: #a6e22e;
+            --consumption-bg-color: rgba(166, 226, 46, 0.8);
+            --production-color: #f92672;
+            --production-bg-color: rgba(249, 38, 114, 0.8);
+            --daily-difference-color: rgba(253, 216, 53, 0.8);
+            --chart-text-color: #f8f8f2;
+            --chart-tick-color: #75715e;
+        }
+        #energyChart {
+            margin-top: 25px;
         }
     </style>
 </head>
@@ -74,15 +225,94 @@
         <button class="button" onclick="document.getElementById('sdat-file').click()">Upload SDAT Files</button>
         <button class="button" onclick="generateChart()">Generate Chart</button>
         <button class="button" onclick="resetZoom()">Reset Zoom</button>
+        <button class="button" onclick="openExportModal()">Export</button>
         <hr>
         <div id="debug-info"></div>
-
     </div>
     <div id="chart-container">
         <canvas id="energyChart"></canvas>
+        <button id="settings-button" onclick="openSettingsModal()">&#9881;</button>
+    </div>
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExportModal()">&times;</span>
+            <h2>Export Data</h2>
+            <label for="exportType">Export File Type:</label>
+            <select id="exportType">
+                <option value="csv">CSV</option>
+                <option value="json">JSON</option>
+            </select>
+            <br><br>
+            <label for="exportLocation">Export Location:</label>
+            <input type="file" id="exportLocation" webkitdirectory directory>
+            <br><br>
+            <label for="exportName">Export File Name:</label>
+            <input type="text" id="exportName" placeholder="export">
+            <br><br>
+            <button onclick="exportData()">Export</button>
+        </div>
+    </div>
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettingsModal()">&times;</span>
+            <h2>Settings</h2>
+            <label for="themeSelect">Theme:</label>
+            <select id="themeSelect" onchange="changeTheme()">
+                <option value="light">Light Mode</option>
+                <option value="dark">Dark Mode</option>
+                <option value="dracula">Dracula</option>
+                <option value="monokai">Monokai</option>
+            </select>
+            <br><br>
+            <label for="chartType">Chart Type:</label>
+            <select id="chartType" onchange="updateChartType()">
+                <option value="production-consumption">Production & Consumption</option>
+                <option value="daily-difference">Daily Difference</option>
+            </select>
+        </div>
     </div>
     <script>
+        const themeColors = {
+                light: {
+                    consumptionColor: 'rgb(255, 99, 132)',
+                    consumptionBgColor: 'rgba(255, 99, 132, 0.5)',
+                    productionColor: 'rgb(54, 162, 235)',
+                    productionBgColor: 'rgba(54, 162, 235, 0.5)',
+                    dailyDifferenceColor: 'rgba(75, 192, 192, 0.8)',
+                    chartTextColor: '#333',
+                    chartTickColor: '#666'
+                },
+                dark: {
+                    consumptionColor: 'rgb(255, 99, 132)',
+                    consumptionBgColor: 'rgba(255, 99, 132, 0.8)',
+                    productionColor: 'rgb(54, 162, 235)',
+                    productionBgColor: 'rgba(54, 162, 235, 0.8)',
+                    dailyDifferenceColor: 'rgba(75, 192, 192, 0.8)',
+                    chartTextColor: '#ccc',
+                    chartTickColor: '#999'
+                },
+                dracula: {
+                    consumptionColor: '#ff79c6',
+                    consumptionBgColor: 'rgba(255, 121, 198, 0.8)',
+                    productionColor: '#8be9fd',
+                    productionBgColor: 'rgba(139, 233, 253, 0.8)',
+                    dailyDifferenceColor: 'rgba(189, 147, 249, 0.8)',
+                    chartTextColor: '#f8f8f2',
+                    chartTickColor: '#6272a4'
+                },
+                monokai: {
+                    consumptionColor: '#a6e22e',
+                    consumptionBgColor: 'rgba(166, 226, 46, 0.8)',
+                    productionColor: '#f92672',
+                    productionBgColor: 'rgba(249, 38, 114, 0.8)',
+                    dailyDifferenceColor: 'rgba(253, 216, 53, 0.8)',
+                    chartTextColor: '#f8f8f2',
+                    chartTickColor: '#75715e'
+                }
+            };
+
         let chart;
+        let chartType = 'production-consumption';
 
         function initChart() {
             const ctx = document.getElementById('energyChart').getContext('2d');
@@ -92,14 +322,14 @@
                     datasets: [{
                         label: 'Stromverbrauch',
                         data: [],
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'var(--consumption-color)',
+                        backgroundColor: 'var(--consumption-bg-color)',
                         tension: 0.1
                     }, {
                         label: 'Stromproduktion',
                         data: [],
-                        borderColor: 'rgb(54, 162, 235)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'var(--production-color)',
+                        backgroundColor: 'var(--production-bg-color)',
                         tension: 0.1
                     }]
                 },
@@ -111,13 +341,20 @@
                             type: 'time',
                             time: {
                                 unit: 'day'
+                            },
+                            ticks: {
+                                color: 'var(--chart-tick-color)'
                             }
                         },
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Energy (kWh)'
+                                text: 'Energy (kWh)',
+                                color: 'var(--chart-text-color)'
+                            },
+                            ticks: {
+                                color: 'var(--chart-tick-color)'
                             }
                         }
                     },
@@ -136,29 +373,256 @@
                                 enabled: true,
                                 mode: 'xy',
                             }
+                        },
+                        legend: {
+                            labels: {
+                                color: 'var(--chart-text-color)'
+                            }
                         }
                     }
                 }
             });
         }
 
-        function updateChart(data) {
-            console.log("Updating chart with data:", data);
-            if (chart) {
-                chart.data.datasets[0].data = data.consumption.map(d => ({ x: new Date(d.timestamp), y: d.value }));
-                chart.data.datasets[1].data = data.production.map(d => ({ x: new Date(d.timestamp), y: d.value }));
-                chart.update();
-                updateDebugInfo(`Chart updated with ${data.consumption.length} consumption and ${data.production.length} production entries`);
-            } else {
-                updateDebugInfo("Error: Chart is not initialized");
+        function updateChart() {
+            if (chartType === 'production-consumption') {
+                updateProductionConsumptionChart();
+            } else if (chartType === 'daily-difference') {
+                updateDailyDifferenceChart();
             }
+        }
+
+        let chartData = {
+            consumption: [],
+            production: []
+        };
+
+        function updateChartType() {
+            chartType = document.getElementById('chartType').value;
+            updateChart();
+        }
+
+        function generateChart() {
+            updateDebugInfo("Generating chart...");
+            pywebview.api.get_chart_data().then(data => {
+                console.log("Received chart data:", data);
+                chartData = processChartData(data);
+                updateChart();
+            });
+        }
+
+
+       function updateProductionConsumptionChart() {
+            const selectedTheme = document.getElementById('themeSelect').value;
+            const colors = themeColors[selectedTheme];
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            const ctx = document.getElementById('energyChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Stromverbrauch',
+                        data: chartData.consumption,
+                        borderColor: colors.consumptionColor,
+                        backgroundColor: colors.consumptionBgColor,
+                        tension: 0.1
+                    }, {
+                        label: 'Stromproduktion',
+                        data: chartData.production,
+                        borderColor: colors.productionColor,
+                        backgroundColor: colors.productionBgColor,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MMM d'
+                                }
+                            },
+                            ticks: {
+                                color: colors.chartTickColor
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Energy (kWh)',
+                                color: colors.chartTextColor
+                            },
+                            ticks: {
+                                color: colors.chartTickColor
+                            }
+                        }
+                    },
+                    plugins: {
+                        zoom: {
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'xy',
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: colors.chartTextColor
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateDebugInfo("Production & Consumption chart updated");
+        }
+
+
+        function updateDailyDifferenceChart() {
+            const dailyDifference = calculateDailyDifference(chartData.production, chartData.consumption);
+            const selectedTheme = document.getElementById('themeSelect').value;
+            const colors = themeColors[selectedTheme];
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            const ctx = document.getElementById('energyChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dailyDifference.map(d => d.date),
+                    datasets: [{
+                        label: 'Daily Difference',
+                        data: dailyDifference.map(d => d.difference),
+                        backgroundColor: colors.dailyDifferenceColor,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            },
+                            ticks: {
+                                color: colors.chartTickColor
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Energy Difference (kWh)',
+                                color: colors.chartTextColor
+                            },
+                            ticks: {
+                                color: colors.chartTickColor
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: colors.chartTextColor
+                            }
+                        },
+                        zoom: {
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'xy',
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateDebugInfo("Daily Difference chart updated");
+        }
+
+        function processChartData(data) {
+            const parseDate = (dateString) => {
+                const [date, time] = dateString.split('T');
+                const [year, month, day] = date.split('-');
+                const [hour, minute] = time.split(':');
+                return new Date(year, month - 1, day, hour, minute);
+            };
+
+            const consumptionMap = new Map();
+            const productionMap = new Map();
+
+            data.consumption.forEach(d => {
+                const key = parseDate(d.timestamp).getTime();
+                if (!consumptionMap.has(key) || consumptionMap.get(key).y < d.value) {
+                    consumptionMap.set(key, { x: parseDate(d.timestamp), y: d.value });
+                }
+            });
+
+            data.production.forEach(d => {
+                const key = parseDate(d.timestamp).getTime();
+                if (!productionMap.has(key) || productionMap.get(key).y < d.value) {
+                    productionMap.set(key, { x: parseDate(d.timestamp), y: d.value });
+                }
+            });
+
+            return {
+                consumption: Array.from(consumptionMap.values()),
+                production: Array.from(productionMap.values())
+            };
+        }
+
+        function calculateDailyDifference(production, consumption) {
+            const dailyProduction = groupByDate(production);
+            const dailyConsumption = groupByDate(consumption);
+            const dates = [...new Set([...Object.keys(dailyProduction), ...Object.keys(dailyConsumption)])];
+
+            return dates.map(date => ({
+                date: new Date(date),
+                difference: Math.abs((dailyConsumption[date] || 0) - (dailyProduction[date] || 0))
+            }));
+        }
+
+        function groupByDate(data) {
+            return data.reduce((acc, entry) => {
+                const date = entry.x.toISOString().split('T')[0];
+                acc[date] = (acc[date] || 0) + entry.y;
+                return acc;
+            }, {});
         }
 
         function resetZoom() {
             chart.resetZoom();
         }
 
-        async function uploadFiles(type) {
+       async function uploadFiles(type) {
             const fileInput = document.getElementById(`${type}-file`);
             const files = fileInput.files;
 
@@ -178,7 +642,7 @@
 
             pywebview.api.process_files(fileDataList).then(results => {
                 console.log("File processing results:", results);
-                updateDebugInfo(`Processed ${results.length} files`);
+                updateDebugInfo(`Processed ${results.message}`);
             });
         }
 
@@ -191,12 +655,82 @@
             });
         }
 
-        function generateChart() {
-            updateDebugInfo("Generating chart...");
-            pywebview.api.get_chart_data().then(newData => {
-                console.log("Received chart data:", newData);
-                updateChart(newData);
+        function exportData() {
+            const exportType = document.getElementById('exportType').value;
+            const exportLocation = document.getElementById('exportLocation').files[0]?.path;
+            const exportName = document.getElementById('exportName').value;
+
+            if (!exportLocation) {
+                alert('Please select an export location.');
+                return;
+            }
+
+            pywebview.api.export_data(exportType, exportLocation, exportName).then(result => {
+                alert(result.message);
+                closeExportModal();
             });
+        }
+
+        function openExportModal() {
+            document.getElementById('exportModal').style.display = 'block';
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function openSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'block';
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function updateTheme() {
+            const selectedTheme = document.getElementById('themeSelect').value;
+            document.body.className = selectedTheme;
+            updateDebugInfo(`Theme changed to ${selectedTheme}`);
+
+
+
+            const colors = themeColors[selectedTheme];
+            console.log(chart)
+            if (chart) {
+                chart.data.datasets[0].borderColor = colors.consumptionColor;
+                chart.data.datasets[0].backgroundColor = colors.consumptionBgColor;
+                chart.data.datasets[1].borderColor = colors.productionColor;
+                chart.data.datasets[1].backgroundColor = colors.productionBgColor;
+
+                chart.options = {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                color: colors.chartTickColor
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                color: colors.chartTickColor
+                            },
+                            title: {
+                                color: colors.chartTextColor
+                            }
+                        }]
+                    }
+                };
+
+                console.log(chart.options)
+
+                chart.update();
+            }
+        }
+
+        function changeTheme() {
+            const selectedTheme = document.getElementById('themeSelect').value;
+            document.body.className = selectedTheme;
+            updateDebugInfo(`Theme changed to ${selectedTheme}`);
+            updateTheme()
         }
 
         function updateDebugInfo(message) {
@@ -211,6 +745,7 @@
 
         window.onload = function() {
             initChart();
+            updateTheme();
             updateDebugInfo("Application initialized");
         };
     </script>
