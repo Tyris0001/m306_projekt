@@ -13,7 +13,7 @@ from classes.sdat_parser import SDATParser
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
+window = None
 class EnergyVisualizationApp:
     def __init__(self):
         self.parsed_data = {'entries': []}
@@ -49,6 +49,34 @@ class EnergyVisualizationApp:
         logger.debug(f"Finished processing files. Total entries: {len(self.parsed_data['entries'])}")
         return {"success": True, "message": f"Processed {len(file_data_list)} files"}
 
+    def export_data(self, export_type):
+        export_location = None
+        # Open file prompt to choose export location
+        try:
+            export_location = window.create_file_dialog(webview.SAVE_DIALOG, directory=os.path.expanduser('~'))
+        except Exception as e:
+            logger.error(f"Error while opening file dialog: {str(e)}")
+            return {"success": False, "message": "Error while opening file dialog"}
+
+        # remove filename from export_location
+        filename = os.path.basename(export_location)
+        export_location = os.path.dirname(export_location)
+
+        file_path = os.path.join(export_location, f"{filename}.{export_type}")
+
+        try:
+            if export_type == 'csv':
+                df = pd.DataFrame(self.parsed_data['entries'])
+                df.to_csv(file_path, index=False)
+            elif export_type == 'json':
+                with open(file_path, 'w') as f:
+                    json.dump(self.parsed_data, f)
+
+            return {"success": True, "message": f"Data exported successfully to {file_path}"}
+        except Exception as e:
+            logger.error(f"Error while exporting data: {str(e)}")
+            return {"success": False, "message": "Error while exporting data"}
+
     def get_chart_data(self):
         logger.debug("Getting chart data")
         df = pd.DataFrame(self.parsed_data['entries'])
@@ -59,9 +87,8 @@ class EnergyVisualizationApp:
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df = df.sort_values('timestamp')
 
-        # Group by type and timestamp, then cumsum the values
-        production = df[df['type'] == 'production'].groupby('timestamp')['value'].sum().cumsum().reset_index()
-        consumption = df[df['type'] == 'consumption'].groupby('timestamp')['value'].sum().cumsum().reset_index()
+        production = df[df['type'] == 'production'].copy()
+        consumption = df[df['type'] == 'consumption'].copy()
 
         # Convert timestamps to ISO format strings
         production['timestamp'] = production['timestamp'].dt.strftime('%Y-%m-%dT%H:%M:%S')
@@ -81,7 +108,7 @@ def create_window():
         html_content = file.read()
 
     app = EnergyVisualizationApp()
-    window = webview.create_window('Energy Visualization', html=html_content, js_api=app)
+    window = webview.create_window('Energy Visualization', html=html_content, js_api=app, width=1200, height=800)
     return window
 
 
