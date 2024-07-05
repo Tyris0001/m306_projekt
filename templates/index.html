@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #chart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: calc(100% - 60px);
+            height: 100%;
+            margin-left: 60px;
+        }
+        #side-menu {
+            position: fixed;
+            top: 0;
+            left: -200px;
+            width: 200px;
+            height: 100%;
+            background-color: #f8f9fa;
+            transition: left 0.3s ease-in-out;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 20px;
+        }
+        #side-menu:hover {
+            left: 0;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #debug-info {
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="side-menu">
+        <input type="file" id="esl-file" accept=".xml" multiple style="display:none;">
+        <button class="button" onclick="document.getElementById('esl-file').click()">Upload ESL Files</button>
+        <input type="file" id="sdat-file" accept=".xml" multiple style="display:none;">
+        <button class="button" onclick="document.getElementById('sdat-file').click()">Upload SDAT Files</button>
+        <button class="button" onclick="generateChart()">Generate Chart</button>
+        <button class="button" onclick="resetZoom()">Reset Zoom</button>
+        <hr>
+        <div id="debug-info"></div>
+
+    </div>
+    <div id="chart-container">
+        <canvas id="energyChart"></canvas>
+    </div>
+    <script>
+        let chart;
+
+        function initChart() {
+            const ctx = document.getElementById('energyChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Stromverbrauch',
+                        data: [],
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        tension: 0.1
+                    }, {
+                        label: 'Stromproduktion',
+                        data: [],
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Energy (kWh)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        zoom: {
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'xy',
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(data) {
+            console.log("Updating chart with data:", data);
+            if (chart) {
+                chart.data.datasets[0].data = data.consumption.map(d => ({ x: new Date(d.timestamp), y: d.value }));
+                chart.data.datasets[1].data = data.production.map(d => ({ x: new Date(d.timestamp), y: d.value }));
+                chart.update();
+                updateDebugInfo(`Chart updated with ${data.consumption.length} consumption and ${data.production.length} production entries`);
+            } else {
+                updateDebugInfo("Error: Chart is not initialized");
+            }
+        }
+
+        function resetZoom() {
+            chart.resetZoom();
+        }
+
+        async function uploadFiles(type) {
+            const fileInput = document.getElementById(`${type}-file`);
+            const files = fileInput.files;
+
+            if (files.length === 0) {
+                alert('Please select one or more files.');
+                return;
+            }
+
+            updateDebugInfo(`Uploading ${files.length} ${type.toUpperCase()} files`);
+
+            const fileDataList = await Promise.all(Array.from(files).map(async (file) => {
+                return {
+                    name: file.name,
+                    content: await readFileAsDataURL(file)
+                };
+            }));
+
+            pywebview.api.process_files(fileDataList).then(results => {
+                console.log("File processing results:", results);
+                updateDebugInfo(`Processed ${results.length} files`);
+            });
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function generateChart() {
+            updateDebugInfo("Generating chart...");
+            pywebview.api.get_chart_data().then(newData => {
+                console.log("Received chart data:", newData);
+                updateChart(newData);
+            });
+        }
+
+        function updateDebugInfo(message) {
+            const debugInfo = document.getElementById('debug-info');
+            debugInfo.innerHTML += `<p>${new Date().toLocaleTimeString()}: ${message}</p>`;
+            debugInfo.scrollTop = debugInfo.scrollHeight;
+            console.log(message);
+        }
+
+        document.getElementById('esl-file').addEventListener('change', () => uploadFiles('esl'));
+        document.getElementById('sdat-file').addEventListener('change', () => uploadFiles('sdat'));
+
+        window.onload = function() {
+            initChart();
+            updateDebugInfo("Application initialized");
+        };
+    </script>
+</body>
+</html>
