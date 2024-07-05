@@ -1,53 +1,48 @@
+import datetime,logging
 import xml.etree.ElementTree as ET
-from datetime import timedelta
-from dateutil import parser as date_parser
-from classes.helpers import export_to_csv, export_to_json
+from datetime import datetime, timedelta
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 class SDATParser:
     def __init__(self, file_path):
         self.file_path = file_path
         self.data = []
 
     def parse(self):
+        logger.debug(f"Parsing SDAT file: {self.file_path}")
         tree = ET.parse(self.file_path)
         root = tree.getroot()
 
-        document_id_elem = root.find('.//{http://www.strom.ch}DocumentID')
-        document_id = document_id_elem.text if document_id_elem is not None else None
+        ns = {'rsm': 'http://www.strom.ch'}
 
-        start_time_elem = root.find('.//{http://www.strom.ch}StartDateTime')
-        start_time = start_time_elem.text if start_time_elem is not None else None
+        document_id = root.find('.//rsm:DocumentID', ns).text
+        type = 'consumption' if 'ID742' in document_id else 'production' if 'ID735' in document_id else 'unknown'
 
-        resolution_value_elem = root.find('.//{http://www.strom.ch}Resolution')
-        resolution_value = int(resolution_value_elem.find('{http://www.strom.ch}Resolution').text) if resolution_value_elem is not None else None
+        start_time_elem = root.find('.//rsm:StartDateTime', ns)
+        start_time = datetime.fromisoformat(start_time_elem.text) if start_time_elem is not None else None
 
-        observations = root.findall('.//{http://www.strom.ch}Observation')
+        resolution_elem = root.find('.//rsm:Resolution/rsm:Resolution', ns)
+        resolution = int(resolution_elem.text) if resolution_elem is not None else 15  # Default to 15 minutes
+
+        observations = root.findall('.//rsm:Observation', ns)
 
         for obs in observations:
-            sequence_elem = obs.find('.//{http://www.strom.ch}Sequence')
-            volume_elem = obs.find('.//{http://www.strom.ch}Volume')
+            sequence_elem = obs.find('.//rsm:Sequence', ns)
+            volume_elem = obs.find('.//rsm:Volume', ns)
 
             sequence = int(sequence_elem.text) if sequence_elem is not None else None
             volume = float(volume_elem.text) if volume_elem is not None else None
 
-            if start_time and resolution_value:
-                timestamp = date_parser.parse(start_time) + timedelta(minutes=sequence * resolution_value)
-                timestamp = timestamp.isoformat()
-
+            if start_time and sequence is not None:
+                timestamp = start_time + timedelta(minutes=(sequence - 1) * resolution)
                 self.data.append({
-                    'document_id': document_id,
                     'timestamp': timestamp,
-                    'sequence': sequence,
-                    'volume': volume
+                    'value': volume,
+                    'type': type
                 })
 
+        logger.debug(f"Parsed {len(self.data)} entries from SDAT file")
+
     def get_data(self):
-        unique_data = {entry['timestamp']: entry for entry in self.data}
-        sorted_data = sorted(unique_data.values(), key=lambda x: x['timestamp'])
-        return sorted_data
-
-    def export_to_csv(self, file_path):
-        export_to_csv(self.get_data(), file_path)
-
-    def export_to_json(self, file_path):
-        export_to_json(self.get_data(), file_path)
+        return self.data
